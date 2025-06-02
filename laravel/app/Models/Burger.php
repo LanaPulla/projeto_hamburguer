@@ -8,7 +8,9 @@ class Burger extends Model
 {
     protected $table = 'burger';
     protected $fillable=[
-        'name',
-        'birthdate'
+        'person_name',
+        'bread_id',
+        'meat_id',
+        // 'status_id'
     ];
 }

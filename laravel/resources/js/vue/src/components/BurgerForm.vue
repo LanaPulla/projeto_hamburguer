@@ -18,7 +18,7 @@
           <label for="pao">Escolha o pão:</label>
           <select name="pao" id="pao" v-model="pao">
             <option value="">Selecione o seu pão</option>
-            <option v-for="pao in paes" :key="pao.id" :value="pao.value"> {{ pao.value }}</option>
+            <option v-for="pao in paes" :key="pao.id" :value="pao.id"> {{ pao.value }}</option>
           </select>
         </div>
 
@@ -26,7 +26,7 @@
           <label id="opcionais-title" for="carne">Escolha a carne do seu burger</label>
           <select name="carne" id="carne" v-model="carne">
             <option value="">Selecione o tipo de carne</option>
-            <option v-for="carne in carnes" :key="carne.id" :value="carne.value">{{ carne.value }}</option>
+            <option v-for="carne in carnes" :key="carne.id" :value="carne.id">{{ carne.value }}</option>
           </select>
         </div>
 
@@ -94,39 +94,36 @@ export default {
     },
     async createBurger(e){
        e.preventDefault();
+  
+      const data = {
+        nome: this.nome,
+        carne: this.carne,
+        pao: this.pao,
+        opcionais: Array.from(this.opcionais),
+        status: "Solicitado"
+      };
 
-  // Pega os dados atuais
-    const burgersReq = await fetch("http://localhost:3000/burgers");
-    const burgers = await burgersReq.json();
+      console.log(data);
 
-    const data = {
-      id: nextId.toString(), // força id inteiro
-      nome: this.nome,
-      carne: this.carne,
-      pao: this.pao,
-      opcionais: Array.from(this.opcionais),
-      status: "Solicitado"
-    };
+      const dataJson = JSON.stringify(data);
 
-    const dataJson = JSON.stringify(data);
+      const req = await fetch("/burger/pedir", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: dataJson
+      });
 
-    const req = await fetch("http://localhost:3000/burgers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: dataJson
-    });
+      const res = await req.json();
 
-    const res = await req.json();
+      this.msg = `Pedido N° ${res.id} realizado com sucesso`;
 
-    this.msg = `Pedido N° ${res.id} realizado com sucesso`;
+      setTimeout(() => this.msg = "", 3000);
 
-    setTimeout(() => this.msg = "", 3000);
-
-    this.nome = "";
-    this.carne = "";
-    this.pao = "";
-    this.opcionais = [];
-      }
+      this.nome = "";
+      this.carne = "";
+      this.pao = "";
+      this.opcionais = [];
+    }
   },
   mounted(){
       this.getPaes();

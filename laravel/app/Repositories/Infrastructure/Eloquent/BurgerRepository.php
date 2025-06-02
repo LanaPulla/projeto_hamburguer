@@ -38,10 +38,10 @@ class BurgerRepository implements BurgerRepositoryInterface{
 
     public function getOptional()
     {
-        $opcional = OptionalTypes::toList()->map(function ($item,$item2){
+        $opcional = OptionalTypes::toList()->map(function ($item){
             return[
                 'label' => $item,
-                'value' => $item2
+                'value' => $item
             ];
         });
         return $opcional;
@@ -51,7 +51,7 @@ class BurgerRepository implements BurgerRepositoryInterface{
     public function getBread()
     {
        $bread = DB::table('burger_bread')->get()->map(function ($item){ //get retorna uma collection std e entao pode ser usado map
-            return [ 'value' => $item->name];
+            return [ 'value' => $item->name, 'id' => $item->id];
         });
        return $bread;
     }
@@ -59,11 +59,10 @@ class BurgerRepository implements BurgerRepositoryInterface{
     public function getMeat()
     {
         $meat = DB::table('burger_meat')->get()->map(function ($item){
-            return['value' => $item->name];
+            return['value' => $item->name, 'id' => $item->id];
         });
         return $meat;
     }
-
 
 }
 
