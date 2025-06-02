@@ -18,7 +18,7 @@
           <label for="pao">Escolha o pão:</label>
           <select name="pao" id="pao" v-model="pao">
             <option value="">Selecione o seu pão</option>
-            <option v-for="pao in paes" :key="pao.id" :value="pao.tipo"> {{ pao.tipo }}</option>
+            <option v-for="pao in paes" :key="pao.id" :value="pao.value"> {{ pao.value }}</option>
           </select>
         </div>
 
@@ -26,7 +26,7 @@
           <label id="opcionais-title" for="carne">Escolha a carne do seu burger</label>
           <select name="carne" id="carne" v-model="carne">
             <option value="">Selecione o tipo de carne</option>
-            <option v-for="carne in carnes" :key="carne.id" :value="carne.tipo">{{ carne.tipo }}</option>
+            <option v-for="carne in carnes" :key="carne.id" :value="carne.value">{{ carne.value }}</option>
           </select>
         </div>
 
@@ -37,9 +37,9 @@
               name="opcionais"
               type="checkbox"
               v-model="opcionais"
-             :value="opcionail.tipo"
+             :value="opcionail.value"
             />
-            <span>{{ opcionail.tipo }}</span>
+            <span>{{ opcionail.label }}</span>
           </div>
         </div>
 
@@ -61,9 +61,9 @@ export default {
   },
   data() {
     return {
+        opcionaisdata: [],
         paes: null, //propriedades no plural sao as informacoes q vao vir do json
         carnes: null,
-        opcionaisdata: null,
         nome: null,
         pao: null,
         carne: null,
@@ -72,15 +72,25 @@ export default {
     };
   },
   methods:{
-    async getIngredientes(){
-        const req = await fetch("http://localhost:3000/ingredientes");
+    async getPaes(){
+        const req = await fetch("/api/paes");
+        const data = await req.json();
+        this.paes = data;
+        // this.opcionaisdata = data.opcionais;
+
+    },
+    async getCarnes(){
+        const req = await fetch("/api/carnes");
         const data = await req.json();
 
-        //console.log(data);
+        this.carnes = data;
+    },
+    async getOpcionais(){
+        const req = await fetch("/api/opcionais");
+        const data = await req.json();
 
-        this.paes = data.paes;
-        this.carnes = data.carnes;
-        this.opcionaisdata = data.opcionais;
+        this.opcionaisdata = data;
+        console.log(this.opcionaisdata);
     },
     async createBurger(e){
        e.preventDefault();
@@ -88,11 +98,6 @@ export default {
   // Pega os dados atuais
     const burgersReq = await fetch("http://localhost:3000/burgers");
     const burgers = await burgersReq.json();
-
-    // Calcula o próximo ID manualmente
-    const nextId = burgers.length > 0
-      ? Math.max(...burgers.map((b) => parseInt(b.id))) + 1 //b = x em for(x=0;x<3;x++) / converte para int para fazer a conta pois e salvo como string
-      : 1;
 
     const data = {
       id: nextId.toString(), // força id inteiro
@@ -124,7 +129,9 @@ export default {
       }
   },
   mounted(){
-      this.getIngredientes();
+      this.getPaes();
+      this.getCarnes();
+      this.getOpcionais();
     }
 };
 </script>

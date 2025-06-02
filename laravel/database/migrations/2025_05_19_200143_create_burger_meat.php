@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,10 +18,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::table('burger_meat')->insert(['id' => 0, 'name' => 'maminha']);
-        DB::table('burger_meat')->insert(['id' => 1, 'name' => 'alcatra']);
-        DB::table('burger_meat')->insert(['id' => 2, 'name' => 'picanha']);
-        DB::table('burger_meat')->insert(['id' => 3, 'name' => 'veggie_burger']);    
+        DB::table('burger_meat')->insert(['id' => 0, 'name' => 'Maminha']);
+        DB::table('burger_meat')->insert(['id' => 1, 'name' => 'Alcatra']);
+        DB::table('burger_meat')->insert(['id' => 2, 'name' => 'Picanha']);
+        DB::table('burger_meat')->insert(['id' => 3, 'name' => 'Veggie Burger']);    
     }
 
     /**

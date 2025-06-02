@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('burger', function (Blueprint $table) {
-            $table->integer('opcional_id');
-            $table->foreign('opcional_id')->references('id')->on('burger_optional');       
+            $table->integer('optional_id');
+            $table->foreign('optional_id')->references('id')->on('burger_optional');       
             $table->integer('bread_id');
             $table->foreign('bread_id')->references('id')->on('burger_bread');       
             $table->integer('meat_id');

@@ -13,8 +13,6 @@ return new class extends Migration
     {
         Schema::create('burger_optional', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_burger');
-            $table->foreign('id_burger')->references('id')->on('burger');
             $table->boolean('salami');
             $table->boolean('cheddar');
             $table->boolean('red_onion');

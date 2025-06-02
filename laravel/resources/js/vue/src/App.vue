@@ -21,7 +21,7 @@ export default {
   },
   data(){ 
     return{
-      logo_src: " public/img/logo.png",
+      logo_src: " /img/logo.png",
       app_name: "Make your Burguer"
     }
   }
