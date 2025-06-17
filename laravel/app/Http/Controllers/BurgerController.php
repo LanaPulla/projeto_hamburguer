@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Infrastructure\Eloquent\BurgerRepositoryInterface;
 use App\Services\BurgerService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BurgerController extends Controller
 {
@@ -29,8 +30,26 @@ class BurgerController extends Controller
         return view('burgerTable');
     }
 
-    public function store(Request $request, ){
-        $this->service->saveSeparately()->
+    public function store(Request $request){
+        try {
+            $burger = $this->service->saveSeparately($request->all());
+    
+            return response()->json([
+                'success' => true,
+                'id' => $burger->id,
+                'message' => 'Pedido criado com sucesso'
+            ]);
+    
+        } catch(\Exception $ex) {
+            Log::error('Erro no store: ' . $ex->getMessage(), [
+                'trace' => $ex->getTraceAsString()
+            ]);
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Erro ao criar o pedido'
+            ], 500);
+        }
     }
 
     public function getBreadTypes()

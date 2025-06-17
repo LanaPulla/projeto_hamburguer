@@ -16,8 +16,16 @@ class BurgerRepository implements BurgerRepositoryInterface{
 
     } 
 
-    public function saveBurger($id = null)
+    public function saveBurger($attributes)
     {
+        return Burger::create([
+            'person_name' => $attributes['person_name'],
+            'bread_id' => $attributes['bread_id'],
+            'meat_id' => $attributes['meat_id'],
+            'optional_id' => $attributes['optional_id'],
+            'status_id' => $attributes['status_id'],
+        ]);
+        //    return $this->model->newInstance((array)$attributes)->save();
 
     }
 

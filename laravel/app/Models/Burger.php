@@ -11,6 +11,11 @@ class Burger extends Model
         'person_name',
         'bread_id',
         'meat_id',
-        // 'status_id'
+        'status_id'
     ];
+
+    protected $attributes = [
+        'status_id' => 0,
+    ];
+
 }
