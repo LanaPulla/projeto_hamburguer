@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BurgerSaveRequest;
 use App\Repositories\Infrastructure\Eloquent\BurgerRepositoryInterface;
 use App\Services\BurgerService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BurgerController extends Controller
@@ -30,7 +30,7 @@ class BurgerController extends Controller
         return view('burgerTable');
     }
 
-    public function store(Request $request){
+    public function store(BurgerSaveRequest $request){
         try {
             $burger = $this->service->saveSeparately($request->all());
     

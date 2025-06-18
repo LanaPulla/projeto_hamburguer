@@ -23,7 +23,7 @@ class BurgerService {
             $optional = $this->optional->save($attributes['opcionais']);
     
             // Agora adiciona o ID dos opcionais aos atributos do burger
-            $attributes['opcionais'] = $optional->id;
+            $attributes['optional_id'] = $optional->id;
     
             // Salva o burger com o optional_id corretamente preenchido
             $burger = $this->burger->saveBurger($attributes);

@@ -23,16 +23,33 @@ class OptionalRepository implements OptionalRepositoryInterface{
          $tomato = false;
          $cucumber = false;
 
-        foreach($attributes as $opcionalItem){
-            switch ($opcionalItem){
-                case OptionalTypes::SALAMI: $salami = true; break;
-                case OptionalTypes::CHEDDAR: $cheddar = true; break;
-                case OptionalTypes::RED: $red_onion = true; break;
-                case OptionalTypes::BACON: $bacon = true; break;
-                case OptionalTypes::TOMATO: $tomato = true; break;
-                case OptionalTypes::CUCUMBER: $cucumber = true; break;
+        $optionalTypeMappings = OptionalTypes::toList(); //guarda os dois dados de toList (que vem em lista)
+
+   
+    foreach ($optionalTypeMappings as $constantValue => $displayName) {
+        if (in_array($displayName, $attributes)) { //verifica se o nome do front esta dentro no array attributes
+            switch ($constantValue) { //verifica qual constante foi encontrada no IF
+                case OptionalTypes::SALAMI:
+                    $salami = true;
+                    break;
+                case OptionalTypes::CHEDDAR:
+                    $cheddar = true;
+                    break;
+                case OptionalTypes::RED: 
+                    $red_onion = true;
+                    break;
+                case OptionalTypes::BACON:
+                    $bacon = true;
+                    break;
+                case OptionalTypes::TOMATO:
+                    $tomato = true;
+                    break;
+                case OptionalTypes::CUCUMBER:
+                    $cucumber = true;
+                    break;
             }
         }
+    }
 
         $data = [
             'salami'     => $salami,

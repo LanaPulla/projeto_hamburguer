@@ -15,4 +15,9 @@ class Optional extends Model
         'tomato',
         'cucumber',
     ];
+
+    public function burgers()
+    {
+        return $this->hasMany(Burger::class, 'optional_id');
+    }
 }

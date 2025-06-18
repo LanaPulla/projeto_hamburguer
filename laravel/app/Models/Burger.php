@@ -11,11 +11,17 @@ class Burger extends Model
         'person_name',
         'bread_id',
         'meat_id',
-        'status_id'
+        'status_id',
+        'optional_id',
     ];
 
     protected $attributes = [
         'status_id' => 0,
     ];
+
+    public function optional()
+    {
+        return $this->belongsTo(Optional::class, 'optional_id');
+    }
 
 }

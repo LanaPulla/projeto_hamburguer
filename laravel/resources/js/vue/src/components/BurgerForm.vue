@@ -95,11 +95,9 @@ export default {
       const req = await fetch("/api/opcionais");
       const data = await req.json();
       this.opcionaisdata = data;
-      console.log(this.opcionaisdata);
     },
 
     async createBurger() {
-      // Monta os dados com os nomes corretos para o backend
       const data = {
         person_name: this.person_name,
         meat_id: this.meat_id,
@@ -125,6 +123,8 @@ export default {
           body: dataJson,
         });
 
+        console.log(req);
+
         if (!req.ok) {
           throw new Error("Erro na requisição: " + req.status);
         }
@@ -135,10 +135,10 @@ export default {
         if (contentType && contentType.includes("application/json")) {
           res = await req.json();
         }
-
+        
         this.msg = `Pedido N° ${res.id ?? "???"} realizado com sucesso`;
 
-        setTimeout(() => (this.msg = ""), 3000);
+        setTimeout(() => (this.msg = ""), 5000);
 
         // Limpa formulário
         this.person_name = "";
@@ -148,7 +148,7 @@ export default {
       } catch (error) {
         console.error("Erro ao criar o pedido:", error);
         this.msg = "Erro ao realizar o pedido. Tente novamente.";
-        setTimeout(() => (this.msg = ""), 3000);
+        setTimeout(() => (this.msg = ""), 5000);
       }
     },
   },
