@@ -3,8 +3,8 @@
         <router-link to="/" id="logo-url">
             <img :src="logo" :alt="alt" id="logo">    
         </router-link> 
-        <router-link to="/">Home</router-link> 
-        <router-link to="/pedidos">Pedidos</router-link>
+        <a :href="routes.home">Home</a> 
+        <a :href="routes.pedidos">Pedidos</a>
     </div >
 </template>
 
@@ -12,7 +12,24 @@
 
 export default {
     name: "NavBar",
-    props: ["logo", "alt"]
+    props: ["logo", "alt"],
+
+    data(){
+        return{
+            routes: [],
+        }
+    },
+
+    methods: {
+        async getRoute() {
+        const req = await fetch("/api/rotas");
+        const data = await req.json();
+        this.routes = data;
+        }
+    },
+    mounted(){
+        this.getRoute();
+    }
 }
 </script>
 

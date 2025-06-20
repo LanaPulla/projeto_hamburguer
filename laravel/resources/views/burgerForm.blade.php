@@ -7,7 +7,7 @@
   @vite('resources/js/app.js')
 </head>
 <body>
-  <div id="app"> </div>
+  <div id="burger-form-app"></div>  {{-- mount point para App.vue --}}
   <meta name="csrf-token" content="{{ csrf_token() }}">
 </body>
 </html>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BurgerSaveRequest;
+use App\Models\Burger;
 use App\Repositories\Infrastructure\Eloquent\BurgerRepositoryInterface;
 use App\Services\BurgerService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BurgerController extends Controller
@@ -27,29 +29,19 @@ class BurgerController extends Controller
 
     public function show()
     {
-        return view('burgerTable');
+        $burgers = $this->repository->findAll();
+        return view('burgerTable', compact('burgers')); 
     }
 
     public function store(BurgerSaveRequest $request){
-        try {
             $burger = $this->service->saveSeparately($request->all());
     
             return response()->json([
                 'success' => true,
                 'id' => $burger->id,
-                'message' => 'Pedido criado com sucesso'
-            ]);
-    
-        } catch(\Exception $ex) {
-            Log::error('Erro no store: ' . $ex->getMessage(), [
-                'trace' => $ex->getTraceAsString()
-            ]);
-    
-            return response()->json([
-                'success' => false,
-                'message' => 'Erro ao criar o pedido'
-            ], 500);
-        }
+                'message' => 'Pedido N°' . $burger->id . ' criado com sucesso'
+            ], 200);
+        
     }
 
     public function getBreadTypes()
@@ -70,5 +62,13 @@ class BurgerController extends Controller
         return response()->json($optional);
     }
 
+    public function getRoutes(){
+
+        return response()->json([
+            'home' => route('burger.index'),
+            'pedidos' => route('burger.show'),
+            //'detalhes' => route('burger.show'),
+        ]);
+    }
 
 }

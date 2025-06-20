@@ -39,7 +39,13 @@
 import Message from "./Message.vue"
 
 export default {
-    name: "Dashboard",   
+    name: "Dashboard", 
+    props: {
+    burgers: {
+      type: Array,
+      required: true
+    }
+  }, 
     data(){
         return{
             burgers: null,
@@ -53,6 +59,7 @@ export default {
     },
     methods: {
         async getPedidos(){
+          console.log("oi");
             const req = await fetch("http://localhost:3000/burgers");
 
             const data = await req.json();
@@ -79,8 +86,6 @@ export default {
           this.msg = `Pedido N° ${res.id} deletado com sucesso`;
 
           setTimeout(() => this.msg = "", 3000);
-
-         
 
           this.getPedidos()
           },

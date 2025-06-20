@@ -6,7 +6,7 @@ interface BurgerRepositoryInterface
 {
     public function saveBurger($attributes);
     public function deleteBurger($id);
-    public function findAll($id);
+    public function findAll();
     public function findBurgerById($id);
     public function getOptional();
     public function getBread();

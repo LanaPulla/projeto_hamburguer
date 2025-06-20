@@ -75,6 +75,7 @@ export default {
       meat_id: "",
       opcionais: [],
       msg: null,
+      errors: [], 
     };
   },
 
@@ -113,43 +114,35 @@ export default {
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content");
 
-      try {
+
         const req = await fetch("/burger/pedir", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Accept": "application/json",
             "X-CSRF-TOKEN": token,
           },
           body: dataJson,
         });
 
-        console.log(req);
-
-        if (!req.ok) {
-          throw new Error("Erro na requisição: " + req.status);
+        if (req.status == 200) { //se o retorno da rota for true entra aqui
+        const res = await req.json();
+        // console.log(res);
+        this.msg = res.message;
+        setTimeout(() => (this.msg = ""), 7000);
         }
-
-        const contentType = req.headers.get("content-type");
-        let res = {};
-
-        if (contentType && contentType.includes("application/json")) {
-          res = await req.json();
+    
+        if (req.status == 422) { //se o retorno da rota for false, entra no bloco
+        const res = await req.json();
+        // console.log(res);
+        this.msg = res.message;
+        setTimeout(() => (this.msg = ""), 7000);
         }
-        
-        this.msg = `Pedido N° ${res.id ?? "???"} realizado com sucesso`;
-
-        setTimeout(() => (this.msg = ""), 5000);
-
         // Limpa formulário
         this.person_name = "";
         this.meat_id = "";
         this.bread_id = "";
         this.opcionais = [];
-      } catch (error) {
-        console.error("Erro ao criar o pedido:", error);
-        this.msg = "Erro ao realizar o pedido. Tente novamente.";
-        setTimeout(() => (this.msg = ""), 5000);
-      }
     },
   },
 

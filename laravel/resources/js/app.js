@@ -1,15 +1,21 @@
 import './bootstrap';
+import { createApp } from 'vue';
 
-import { createApp } from 'vue'
-import App from './vue/src/App.vue'
-import Pedidos from './vue/src/components/Pedidos.vue'
-import router from './vue/src/router'  // Ajuste o caminho conforme sua estrutura!
+import App from './vue/src/App.vue';
+import Pedidos from './vue/src/components/Pedidos.vue';
 
-const app = createApp(App)
-const pedidos = createApp(Pedidos)
+// Monta app para o formulário
+const burgerFormApp = createApp(App);
+burgerFormApp.mount('#burger-form-app');
 
-app.use(router)  // usa o router
-
-app.mount('#app')
-pedidos.mount('#pedidos')
-
+// Monta app para a tabela de pedidos
+const burgerTableApp = createApp({
+  components: { Pedidos },
+  data() {
+    return {
+      burguers: window.burguers || []  // se quiser passar dados JS globalmente
+    }
+  },
+  template: `<pedidos :burguers="burguers" />`
+});
+burgerTableApp.mount('#burger-table-app');

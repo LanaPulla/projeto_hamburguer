@@ -34,9 +34,9 @@ class BurgerRepository implements BurgerRepositoryInterface{
 
     }
 
-    public function findAll($id)
+    public function findAll()
     {
-
+        return $this->model->all();
     }
 
     public function findBurgerById($id)

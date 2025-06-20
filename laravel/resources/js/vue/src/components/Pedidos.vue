@@ -2,7 +2,7 @@
   <div>
     <NavBar :logo="logo_src"/>
     <h1>Gerenciar Pedidos:</h1>
-    <Dashboard />
+    <Dashboard :burgers="burgers"/>
     <Footer />
   </div>
 </template>
@@ -22,8 +22,17 @@ export default {
     Dashboard,
     NavBar,
     Footer
-  }
+  },
+  props: {
+    burgers: {
+      type: Array,
+      required: true
+    }
+  },
+  created(){
+    console.log("oi");
 
+  }
 }
 </script>
 

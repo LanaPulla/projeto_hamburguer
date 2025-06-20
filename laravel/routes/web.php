@@ -14,7 +14,7 @@ Route::group(['prefix' => 'api'], function (){
     Route::get('/paes', [BurgerController::class, 'getBreadTypes'])->name('api.burger.paes');
     Route::get('/carnes', [BurgerController::class, 'getMeatTypes'])->name('api.burger.carnes');
     Route::get('/opcionais', [BurgerController::class, 'getOptionalTypes'])->name('api.burger.opcionais');
-
+    Route::get('/rotas', [BurgerController::class, 'getRoutes'])->name('api.burger.routes');
 });
 
 

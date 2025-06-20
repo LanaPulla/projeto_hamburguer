@@ -7,10 +7,15 @@
   @vite('resources/js/app.js')
 </head>
 <body>
-  <div id="pedidos"> </div> 
+  <div id="burger-table-app">
+    <pedidos burgers="@json($burgers)"></pedidos>  {{-- componente Pedidos recebe os dados --}}
+  </div>
 </body>
 </html>
-
+<script>
+  window.burguers = @json($burgers);
+  console.log(window.burguers);
+</script>
 <style>
 
 </style>

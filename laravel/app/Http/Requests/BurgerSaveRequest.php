@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
 
 class BurgerSaveRequest extends FormRequest
@@ -22,7 +23,13 @@ class BurgerSaveRequest extends FormRequest
             'meat_id'       => 'required',
         ];
     }
-
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => $validator->errors()->first(),  //pega o primeiro erro e manda
+        ], 422));
+    }
     public function messages()
     {
         return [
