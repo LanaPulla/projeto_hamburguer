@@ -25,12 +25,12 @@ export default {
   },
   props: {
     burgers: {
-      type: Array,
-      required: true
-    }
+    type: Array,
+    default: () => [] 
+  }
   },
-  created(){
-    console.log("oi");
+  mounted(){
+    console.log("pedidos aqui:",this.burgers);
 
   }
 }
@@ -38,6 +38,6 @@ export default {
 
 <style  scoped>
   #footer{
-    position:absolute;
+    position:relative;
   }
 </style>

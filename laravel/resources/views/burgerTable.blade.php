@@ -8,13 +8,13 @@
 </head>
 <body>
   <div id="burger-table-app">
-    <pedidos burgers="@json($burgers)"></pedidos>  {{-- componente Pedidos recebe os dados --}}
+    <pedidos :burgers='@json($burgers)'></pedidos>  {{-- componente Pedidos recebe os dados --}}
   </div>
 </body>
 </html>
 <script>
-  window.burguers = @json($burgers);
-  console.log(window.burguers);
+  window.burgers = @json($burgers);
+  console.log(window.burgers);
 </script>
 <style>
 

@@ -1,8 +1,8 @@
 <template>
       <div id="nav">
-        <router-link to="/" id="logo-url">
+        <a id="logo-url">
             <img :src="logo" :alt="alt" id="logo">    
-        </router-link> 
+        </a> 
         <a :href="routes.home">Home</a> 
         <a :href="routes.pedidos">Pedidos</a>
     </div >

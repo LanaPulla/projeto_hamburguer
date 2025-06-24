@@ -7,19 +7,19 @@
                 <div>Cliente:</div>
                 <div>Pão:</div>
                 <div>Carne:</div>
-                <div>Opcioanis:</div>
+                <div>Opcionais:</div>
                 <div>Ações:</div>
             </div>
         </div>
         <div id="burger-table-rows">
             <div class="burger-table-row" v-for="burger in burgers" :key="burger.id">
                 <div class="order-number">{{ burger.id }}</div>
-                <div>{{ burger.nome }}</div>
-                <div>{{ burger.pao }} </div>
-                <div>{{ burger.carne }}</div>
+                <div>{{ burger.person_name }}</div>
+                <div>{{ burger.bread_name }} </div>
+                <div>{{ burger.meat_name }}</div>
                 <div>
                     <ul>
-                        <li v-for="(opcional, index) in burger.opcionais" :key="index">{{ opcional }}</li>
+                        <li v-for="(opcional, index) in burger.optional_name" :key="index">{{ opcional  }}</li>
                     </ul>
                 </div>
                 <div>
@@ -41,14 +41,14 @@ import Message from "./Message.vue"
 export default {
     name: "Dashboard", 
     props: {
-    burgers: {
+      burgers: {
       type: Array,
       required: true
     }
   }, 
     data(){
         return{
-            burgers: null,
+            all_burgers: null,
             burger_id: null,
             status:[],
             msg: null
@@ -58,17 +58,7 @@ export default {
         Message,
     },
     methods: {
-        async getPedidos(){
-          console.log("oi");
-            const req = await fetch("http://localhost:3000/burgers");
-
-            const data = await req.json();
-
-            this.burgers = data;
-
-
-            this.getStatus();
-        },
+      
         async getStatus(){
           const req = await fetch("http://localhost:3000/status");
 
@@ -108,6 +98,7 @@ export default {
     },
     mounted(){
         this.getPedidos();
+        console.log(this.burgers);
     }
     
 }
