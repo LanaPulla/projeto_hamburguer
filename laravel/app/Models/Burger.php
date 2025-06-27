@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Burger extends Model
 {
-    protected $appends = ['meat_name','optional_name', 'bread_name'];
+    protected $appends = ['meat_name','optional_name', 'bread_name', 'status_name'];
     protected $table = 'burger';
     protected $fillable=[
         'person_name',
@@ -36,6 +36,11 @@ class Burger extends Model
         return $this->belongsTo(Bread::class);
     }
 
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
     public function getOptionalNameAttribute(){
 
         $salami = $this->optional->salami ? OptionalTypes::SALAMI : '';
@@ -55,5 +60,9 @@ class Burger extends Model
 
     public function getBreadNameAttribute(){
         return $this->bread->name;
+    }
+
+    public function getStatusNameAttribute(){
+        return $this->status->name;
     }
 }

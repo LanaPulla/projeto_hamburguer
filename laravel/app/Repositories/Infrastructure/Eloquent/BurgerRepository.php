@@ -5,6 +5,7 @@ namespace App\Repositories\Infrastructure\Eloquent;
 use App\Domain\Types\OptionalTypes;
 use App\Models\Burger;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class BurgerRepository implements BurgerRepositoryInterface{
 
@@ -29,19 +30,22 @@ class BurgerRepository implements BurgerRepositoryInterface{
 
     }
 
-    public function deleteBurger($id)
+    public function destroy($id)
     {
-
+        return $this->model->destroy($id);
     }
 
     public function findAll()
-    {
-        return $this->model->all();
+    {        
+        $search = $this->model->newQuery(); 
+        $burgers = $search->orderBy('status_id', 'desc')->get();
+        return $burgers;
     }
 
     public function findBurgerById($id)
     {
-        
+        $search = $this->model->newQuery();
+        return $search->where('id', '=', $id)->first();
     }
 
     public function getOptional()
@@ -71,6 +75,27 @@ class BurgerRepository implements BurgerRepositoryInterface{
         });
         return $meat;
     }
+
+    public function getStatus()
+    {
+        $status = DB::table('burger_status')->get()->map(function ($item){
+            return['value' => $item->name, 'id' => $item->id];
+        });
+        return $status;
+    }
+
+    public function updateStatus($id, $newStatus){
+        try{
+            $burger = $this->findBurgerById($id);
+            $burger->status_id = $newStatus;
+            $burger->save();
+            return true;
+        }catch (\Exception $ex) {
+            Log::error('Erro no store: ' . $ex->getMessage(), ['trace' => $ex->getTraceAsString()]);
+            throw $ex;
+        }
+    }
+
 
 }
 

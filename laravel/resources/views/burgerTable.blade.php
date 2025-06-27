@@ -10,11 +10,11 @@
   <div id="burger-table-app">
     <pedidos :burgers='@json($burgers)'></pedidos>  {{-- componente Pedidos recebe os dados --}}
   </div>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 </body>
 </html>
 <script>
   window.burgers = @json($burgers);
-  console.log(window.burgers);
 </script>
 <style>
 

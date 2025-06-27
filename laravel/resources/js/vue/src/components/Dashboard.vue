@@ -19,15 +19,15 @@
                 <div>{{ burger.meat_name }}</div>
                 <div>
                     <ul>
-                        <li v-for="(opcional, index) in burger.optional_name" :key="index">{{ opcional  }}</li>
+                        <li v-for="(opcional, index) in burger.optional_name" :key="index">{{ opcional }}</li>
                     </ul>
                 </div>
                 <div>
-                    <select name="status" class="status" @change="updateBurger($event, burger.id)">
+                    <select name="status" class="status" @change="updateStatus($event, burger.id)">
                         <option value="">Selecione</option>
-                          <option v-for="s in status" :key="s.id" :value="s.tipo" :selected="burger.status == s.tipo">{{ s.tipo }}</option>
+                          <option v-for="status in allStatus" :key="status.id" :value="status.id" :selected="status.id === burger.status_id">{{ status.value}}</option>
                     </select>
-                    <button class="delete-btn" @click="deleteBurger(burger.id)" >Cancelar</button>
+                    <button class="delete-btn"  @click="deleteBurger(burger.id)">Cancelar Pedido</button>
                 </div>
             </div>
         </div>
@@ -42,63 +42,76 @@ export default {
     name: "Dashboard", 
     props: {
       burgers: {
-      type: Array,
+      type: Object,
       required: true
     }
   }, 
     data(){
         return{
-            all_burgers: null,
-            burger_id: null,
-            status:[],
-            msg: null
+          allStatus:[],
+          msg: null
         }
     },
     components:{
         Message,
     },
     methods: {
-      
-        async getStatus(){
-          const req = await fetch("http://localhost:3000/status");
-
+        async getStatus() {
+          const req = await fetch("/api/status");
           const data = await req.json();
-          this.status = data; 
+          this.allStatus = data;
+      },
 
-         },
-         async deleteBurger(id){
-          const req = await fetch(`http://localhost:3000/burgers/${id}`, {
-            method: "DELETE",
+        async updateStatus(event, id){
+          const selectedValue = event.target.value;
+          const data = {
+          status_id: selectedValue,
+        };
+
+        console.log("Enviando dados:", data);
+
+        const dataJson = JSON.stringify(data);
+        const token = document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content");
+
+        const req = await fetch(`/burger/pedidos/${id}/alterar-status`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "X-CSRF-TOKEN": token,
+            },
+            body: dataJson,
           });
+        },
+        async deleteBurger(id){
+          const token = document
+          .querySelector('meta[name="csrf-token"]')
+          .getAttribute("content");
 
-          const res = await req.json()
-          
-          this.msg = `Pedido N° ${res.id} deletado com sucesso`;
-
-          setTimeout(() => this.msg = "", 3000);
-
-          this.getPedidos()
-          },
-          async updateBurger(event, id){
-
-            const option = event.target.value;
-
-            const dataJson = JSON.stringify({ status: option });
-
-            const req = await fetch(`http://localhost:3000/burgers/${id}`, {
-                  method: "PATCH",
-                  headers: { "Content-Type": "application/json" },
-                  body: dataJson
-             });
-
-             const res = await req.json()
-
-            
-          }
+          await fetch(`/burger/pedidos/${id}/delete`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+              "X-CSRF-TOKEN": token,
+            },
+          })
+          .then(res => res.json())
+          .then(res => {
+            this.msg = res.message;
+            setTimeout(() => this.msg = "", 7000);
+            delete this.burgers[id];
+          })
+          .catch(error => {
+            console.error("Erro ao deletar pedido:", error);
+          })
+        },
     },
-    mounted(){
-        this.getPedidos();
-        console.log(this.burgers);
+    created(){
+      this.getStatus();
+      console.log("dashboard:",this.burgers);
     }
     
 }
@@ -115,6 +128,7 @@ export default {
   .burger-table-row {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
   }
 
   #burger-table-heading {
@@ -154,6 +168,7 @@ export default {
     margin: 0 auto;
     cursor: pointer;
     transition: .5s;
+    margin-top: 8px;
   }
   
   .delete-btn:hover {

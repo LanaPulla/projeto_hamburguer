@@ -23,13 +23,13 @@ class BurgerController extends Controller
     
     public function index()
     {
-        
         return view('burgerForm');
     }
 
-    public function show()
+    public function show(Request $request)   
     {
-        $burgers = $this->repository->findAll();
+        // if($request->has(''))
+        $burgers = $this->repository->findAll()->keyBy('id');
         return view('burgerTable', compact('burgers')); 
     }
 
@@ -62,6 +62,12 @@ class BurgerController extends Controller
         return response()->json($optional);
     }
 
+    public function getStatusTypes()
+    {
+        $status = $this->repository->getStatus();
+        return response()->json($status);
+    }
+
     public function getRoutes(){
 
         return response()->json([
@@ -69,6 +75,20 @@ class BurgerController extends Controller
             'pedidos' => route('burger.show'),
             //'detalhes' => route('burger.show'),
         ]);
+    }
+
+    public function editStatus($id, Request $request){
+        $edit = $this->repository->updateStatus($id, $request->get('status_id'));
+        return $edit;
+    }
+    
+    public function delete($id){
+        $burger = $this->repository->destroy($id);
+        return response()->json([
+            'success' => true,
+            'id' => $id,
+            'message' => 'Pedido N°' . $id . ' deletado com sucesso'
+        ], 200);
     }
 
 }
