@@ -1,19 +1,21 @@
 <template>
-    <div class="filter-box">
-        <label>Cliente</label>
-        <input type="text">
-        <label>Status:</label>
-        <div class="checkbox-container" v-for="s in allStatus" :key="s.id">
-            <input
-              name="status_id[]"
-              type="checkbox"
-              v-model="statusSelected"
-              :value="s.value"
-            />
-            <span>{{ s.value }}</span>
-          </div>
-        <button class="filter-btn">Buscar Pedido</button>
-    </div>
+    <form method="GET" action="/burger/pedidos">
+      <div class="filter-box">
+          <label>Cliente:</label>
+          <input type="text" v-model="client" name="person_name">
+          <label>Status:</label>
+          <div class="checkbox-container" v-for="s in allStatus" :key="s.id">
+              <input
+                name="status_id[]"
+                type="checkbox"
+                v-model="statusSelected"
+                :value="s.id"
+              />
+              <span>{{ s.value }}</span>
+            </div>
+          <button class="filter-btn" type="submit">Buscar</button>
+      </div>
+  </form>
 </template>
 
 <script>
@@ -23,6 +25,7 @@ export default {
         return{
           allStatus:[],
           statusSelected: [],
+          client:'',
         }
     },
     props: {
@@ -38,11 +41,6 @@ export default {
           this.allStatus = data;
             console.log(this.statusSelected);
         },
-        // async getStatus() {
-        //   const req = await fetch("/api/status");
-        //   const data = await req.json();
-        //   this.allStatus = data;
-        // },
     },
     watch: {
         statusSelected(newValue){

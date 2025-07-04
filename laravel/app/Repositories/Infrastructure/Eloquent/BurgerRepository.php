@@ -48,6 +48,21 @@ class BurgerRepository implements BurgerRepositoryInterface{
         return $search->where('id', '=', $id)->first();
     }
 
+    public function filter($attributes){
+        $search = $this->model->newQuery();
+
+        if($attributes->has('status_id')){
+            $search->whereIn('status_id', $attributes->status_id);
+        }
+        if($attributes->has('person_name')){
+            $name = mb_strtoupper(str_replace(' ', '%', trim($attributes->person_name)));
+            $search->where(DB::raw("UPPER(person_name)"), 'LIKE', '%' . $name . '%'); 
+        }
+
+        return $search->get();
+
+    }
+
     public function getOptional()
     {
         $opcional = OptionalTypes::toList()->map(function ($item){
@@ -94,6 +109,10 @@ class BurgerRepository implements BurgerRepositoryInterface{
             Log::error('Erro no store: ' . $ex->getMessage(), ['trace' => $ex->getTraceAsString()]);
             throw $ex;
         }
+    }
+
+    public function update($id, $attributtes){
+
     }
 
 

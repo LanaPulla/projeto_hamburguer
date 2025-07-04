@@ -34,4 +34,17 @@ class BurgerService {
             throw $ex;
         }
     }
+
+    public function editSeparately($id, $attributes)
+    {
+       try{
+            $this->burger->update($id, $attributes);
+            $this->optional->update($id, $attributes);
+            return true;
+       }catch (\Exception $ex) {
+            Log::error('Erro no store: ' . $ex->getMessage(), ['trace' => $ex->getTraceAsString()]);
+            throw $ex;
+        }
+    }
+
 }

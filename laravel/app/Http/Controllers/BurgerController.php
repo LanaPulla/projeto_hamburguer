@@ -28,8 +28,11 @@ class BurgerController extends Controller
 
     public function show(Request $request)   
     {
-        // if($request->has(''))
-        $burgers = $this->repository->findAll()->keyBy('id');
+        if($request){
+            $burgers = $this->repository->filter($request);
+        }else{
+            $burgers = $this->repository->findAll()->keyBy('id');
+        }
         return view('burgerTable', compact('burgers')); 
     }
 
@@ -88,6 +91,15 @@ class BurgerController extends Controller
             'success' => true,
             'id' => $id,
             'message' => 'Pedido N°' . $id . ' deletado com sucesso'
+        ], 200);
+    }
+
+    public function edit($id, Request $request){
+        $burger = $this->service->editSeparately($id, $request);
+        return response()->json([
+            'success' => true,
+            'id' => $id,
+            'message' => 'Pedido N°' . $id . ' alterado com sucesso'
         ], 200);
     }
 
