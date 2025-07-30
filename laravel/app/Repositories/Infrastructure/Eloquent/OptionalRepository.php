@@ -63,44 +63,63 @@ class OptionalRepository implements OptionalRepositoryInterface{
         return $this->model->create($data);
     }
 
-    public function destroy($optinal, $id){
-        // $optinalName = $optinal->optional_name; 
-        // // dd($optinalName);
-        // $optionalType = OptionalTypes::toList(); 
+   public function update($id, $attributes)
+    {
+        $salami = false;
+        $cheddar = false;
+        $red_onion = false;
+        $bacon = false;
+        $tomato = false;
+        $cucumber = false;
 
-        // foreach($optionalType as $constantValue => $name){
-        //     if ($name == $optinal){
-        //     switch ($constantValue) { //verifica qual constante foi encontrada no IF
-        //                     case OptionalTypes::SALAMI:
-        //                         $salami = false;
-        //                         break;
-        //                     case OptionalTypes::CHEDDAR:
-        //                         $cheddar = false;
-        //                         break;
-        //                     case OptionalTypes::RED: 
-        //                         $red_onion = false;
-        //                         break;
-        //                     case OptionalTypes::BACON:
-        //                         $bacon = false;
-        //                         break;
-        //                     case OptionalTypes::TOMATO:
-        //                         $tomato = false;
-        //                         break;
-        //                     case OptionalTypes::CUCUMBER:
-        //                         $cucumber = false;
-        //                         break;
-        //                 }
-        //             }
-        //     }
+        $optionalTypeMappings = OptionalTypes::toList();
 
-        // $optinalId = $this->model->newQuery();
-        // $optinalId->where('id', '=', $id)->first();
+        foreach ($optionalTypeMappings as $constantValue => $displayName) {
+            if (in_array($displayName, $attributes)) {
+                switch ($constantValue) {
+                    case OptionalTypes::SALAMI:
+                        $salami = true;
+                        break;
+                    case OptionalTypes::CHEDDAR:
+                        $cheddar = true;
+                        break;
+                    case OptionalTypes::RED:
+                        $red_onion = true;
+                        break;
+                    case OptionalTypes::BACON:
+                        $bacon = true;
+                        break;
+                    case OptionalTypes::TOMATO:
+                        $tomato = true;
+                        break;
+                    case OptionalTypes::CUCUMBER:
+                        $cucumber = true;
+                        break;
+                }
+            }
+        }
 
-        // return ;
+        $data = [
+            'salami'     => $salami,
+            'cheddar'    => $cheddar,
+            'red_onion'  => $red_onion,
+            'bacon'      => $bacon,
+            'tomato'     => $tomato,
+            'cucumber'   => $cucumber,
+        ];
+
+        // Aqui é o ponto-chave: carregue o registro correto
+        $optional = $this->model->findOrFail($id);
+
+        $optional->fill($data)->save();
+
+        return $optional;
     }
 
-    public function update($id, $attributtes){
-
+    public function destroy($optinal)
+    {
+       return $this->model->findOrFail($optinal)->delete();
     }
+
     
 }

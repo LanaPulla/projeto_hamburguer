@@ -41,28 +41,46 @@ class Burger extends Model
         return $this->belongsTo(Status::class);
     }
 
-    public function getOptionalNameAttribute(){
+    public function getOptionalNameAttribute()
+    {
+        $optionalList = OptionalTypes::toList();
 
-        $salami = $this->optional->salami ? OptionalTypes::SALAMI : '';
-        $cheddar = $this->optional->cheddar ? OptionalTypes::CHEDDAR : '';
-        $red_onion = $this->optional->red_onion ? OptionalTypes::RED : '';
-        $bacon = $this->optional->bacon ? OptionalTypes::BACON : '';
-        $tomato = $this->optional->tomato ? OptionalTypes::TOMATO : '';
-        $cucumber = $this->optional->cucumber ? OptionalTypes::CUCUMBER : '';
+        $optionals = [];
 
-        $optionals = [$salami,$cheddar,$red_onion,$bacon,$tomato,$cucumber];
+        if ($this->optional->salami) {
+            $optionals[] = $optionalList[OptionalTypes::SALAMI];
+        }
+        if ($this->optional->cheddar) {
+            $optionals[] = $optionalList[OptionalTypes::CHEDDAR];
+        }
+        if ($this->optional->red_onion) {
+            $optionals[] = $optionalList[OptionalTypes::RED];
+        }
+        if ($this->optional->bacon) {
+            $optionals[] = $optionalList[OptionalTypes::BACON];
+        }
+        if ($this->optional->tomato) {
+            $optionals[] = $optionalList[OptionalTypes::TOMATO];
+        }
+        if ($this->optional->cucumber) {
+            $optionals[] = $optionalList[OptionalTypes::CUCUMBER];
+        }
 
-        return array_values(array_filter($optionals));
+        return array_values($optionals);
     }
-    public function getMeatNameAttribute(){
+
+    public function getMeatNameAttribute()
+    {
         return $this->meat->name;
     }
 
-    public function getBreadNameAttribute(){
+    public function getBreadNameAttribute()
+    {
         return $this->bread->name;
     }
 
-    public function getStatusNameAttribute(){
+    public function getStatusNameAttribute()
+    {
         return $this->status->name;
     }
 }

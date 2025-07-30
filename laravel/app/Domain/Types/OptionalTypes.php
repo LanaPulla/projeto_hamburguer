@@ -6,12 +6,12 @@ use MabeEnum\Enum;
 
 class OptionalTypes extends Enum
 {
-    const SALAMI    = 'Salame';
-    const CHEDDAR   = 'Cheddar';
-    const RED       = 'Cebola Roxa';
-    const BACON     = 'Bacon';
-    const TOMATO    = 'Tomate';
-    const CUCUMBER  = 'Pepino';
+    const SALAMI    = 'salami';
+    const CHEDDAR   = 'cheddar';
+    const RED       = 'red_onion';
+    const BACON     = 'bacon';
+    const TOMATO    = 'tomato';
+    const CUCUMBER  = 'cucumber';
 
     static function toList()
     {

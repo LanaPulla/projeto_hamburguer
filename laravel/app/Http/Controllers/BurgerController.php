@@ -36,7 +36,8 @@ class BurgerController extends Controller
         return view('burgerTable', compact('burgers')); 
     }
 
-    public function store(BurgerSaveRequest $request){
+    public function store(BurgerSaveRequest $request)
+    {
             $burger = $this->service->saveSeparately($request->all());
     
             return response()->json([
@@ -85,17 +86,18 @@ class BurgerController extends Controller
         return $edit;
     }
     
-    public function delete($id){
-        $burger = $this->repository->destroy($id);
+    public function delete($burgerId, $optionalId){
+        $burger = $this->service->destroy($burgerId, $optionalId);
         return response()->json([
             'success' => true,
-            'id' => $id,
-            'message' => 'Pedido N°' . $id . ' deletado com sucesso'
+            'id'      => $burgerId,
+            'message' => 'Pedido N°' . $burgerId . ' deletado com sucesso'
         ], 200);
     }
 
-    public function edit($id, Request $request){
-        $burger = $this->service->editSeparately($id, $request);
+    public function edit(Request $request){
+        $burger = $this->service->editSeparately($request);
+        $id = $request->get('id');
         return response()->json([
             'success' => true,
             'id' => $id,

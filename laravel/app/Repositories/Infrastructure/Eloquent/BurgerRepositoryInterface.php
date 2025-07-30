@@ -10,7 +10,7 @@ interface BurgerRepositoryInterface
     public function findBurgerById($id);
     public function filter($attributes);
     public function updateStatus($id, $newStatus);
-    public function update($id, $attributtes);
+    public function update($attributes);
     public function getOptional();
     public function getBread();
     public function getMeat();

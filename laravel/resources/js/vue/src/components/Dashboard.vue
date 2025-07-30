@@ -14,38 +14,45 @@
     <div id="burger-table-rows">
       <div class="burger-table-row" v-for="burger in burgers" :key="burger.id">
         <template v-if="editingBurgerId === burger.id">
-          <div class="order-number">{{ burger.id }}</div>
-          <div>
-            <input v-model="editingForm.person_name" />
-          </div>
-          <div>
-            <select v-model="editingForm.bread_id">
-              <option value="">Selecione o pão</option>
-              <option v-for="p in paes" :key="p.id" :value="p.id">{{ p.value }}</option>
-            </select>
-          </div>
-          <div>
-            <select v-model="editingForm.meat_id">
-              <option value="">Selecione a carne</option>
-              <option v-for="c in carnes" :key="c.id" :value="c.id">{{ c.value }}</option>
-            </select>
-          </div>
-          <div>
-            <div class="checkbox" v-for="op in opcionaisdata" :key="op.id">
-              <input type="checkbox" :value="op.value" v-model="editingForm.optional_id" />
-              <label>{{ op.label }}</label>
+          <form @submit.prevent="saveEditedBurger(burger.id)" id="formBurger">
+            <div class="order-number">{{ burger.id }}</div>
+
+            <div>
+              <input v-model="editingForm.person_name" />
             </div>
-          </div>
-          <div>
-            <button class="edit-btn" @click="saveEditedBurger(burger.id)">Salvar</button>
-            <button class="edit-btn" @click="cancelEdit">Cancelar</button>
-          </div>
+
+            <div>
+              <select v-model="editingForm.bread_id">
+                <option value="">Selecione o pão</option>
+                <option v-for="p in paes" :key="p.id" :value="p.id">{{ p.value }}</option>
+              </select>
+            </div>
+
+            <div>
+              <select v-model="editingForm.meat_id">
+                <option value="">Selecione a carne</option>
+                <option v-for="c in carnes" :key="c.id" :value="c.id">{{ c.value }}</option>
+              </select>
+            </div>
+
+            <div>
+              <div class="checkbox" v-for="opcional in opcionaisdata" :key="opcional.id">
+                <input type="checkbox" :value="opcional.value" v-model="editingForm.optional_id" />
+                <label>{{ opcional.label }}</label>
+              </div>
+            </div>
+
+            <div>
+              <button class="edit-btn" type="submit">Salvar</button>
+              <button class="edit-btn" type="button" @click="cancelEdit">Cancelar</button>
+            </div>
+          </form>
         </template>
 
         <template v-else>
           <div class="order-number">{{ burger.id }}</div>
           <div>{{ burger.person_name }}</div>
-          <div>{{ burger.bread_name }} </div>
+          <div>{{ burger.bread_name }}</div>
           <div>{{ burger.meat_name }}</div>
           <div>
             <ul>
@@ -61,7 +68,7 @@
                 {{ status.value }}
               </option>
             </select>
-            <button class="delete-btn" @click="deleteBurger(burger.id)">Cancelar Pedido</button>
+            <button class="delete-btn" @click="deleteBurger(burger.id, burger.optional_id)">Cancelar Pedido</button>
             <button class="edit-btn" @click="editBurger(burger)">Editar</button>
           </div>
         </template>
@@ -90,6 +97,7 @@ export default {
       msg: null,
       editingBurgerId: null,
       editingForm: {
+        id:"",
         person_name: "",
         bread_id: "",
         meat_id: "",
@@ -128,10 +136,11 @@ export default {
     editBurger(burger) {
       this.editingBurgerId = burger.id;
       this.editingForm = {
+        id: burger.id,
         person_name: burger.person_name,
         bread_id: burger.bread_id,
         meat_id: burger.meat_id,
-        opcionais: [...burger.optional_name]
+        optional_id: [...burger.optional_name]
       };
     },
     cancelEdit() {
@@ -140,35 +149,37 @@ export default {
         person_name: "",
         bread_id: "",
         meat_id: "",
-        opcionais: []
+        optional_id: []
       };
     },
     async saveEditedBurger(id) {
       const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
       const data = { ...this.editingForm };
-      console.log(data);
-      // const res = await fetch(`/burger/pedidos/${id}/editar`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Accept: "application/json",
-      //     "X-CSRF-TOKEN": token
-      //   },
-      //   body: JSON.stringify(data)
-      // });
-      // if (res.ok) {
-      //   const result = await res.json();
-      //   this.msg = result.message;
-      //   setTimeout(() => (this.msg = ""), 7000);
-      //   this.editingBurgerId = null;
-      // }
+      await fetch(`/burger/pedidos/${id}/editar`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-CSRF-TOKEN": token
+        },
+        body: JSON.stringify(data)
+      })
+        .then(res => res.json())
+        .then(res => {
+          this.msg = res.message;
+            setTimeout(() => (this.msg = ""), 7000);
+            this.editingBurgerId = null;
+            delete this.burgers[id];
+        })
+        .catch(error => {
+            console.error("Erro ao editar pedido:", error);
+          })
     },
     async updateStatus(event, id) {
       const selectedValue = event.target.value;
       const data = {
         status_id: selectedValue
       };
-      const dataJson = JSON.stringify(data);
       const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
       await fetch(`/burger/pedidos/${id}/alterar-status`, {
         method: "POST",
@@ -177,12 +188,12 @@ export default {
           Accept: "application/json",
           "X-CSRF-TOKEN": token
         },
-        body: dataJson
+        body: JSON.stringify(data)
       });
     },
-    async deleteBurger(id) {
+    async deleteBurger(burgerId, optionalId) {
       const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-      await fetch(`/burger/pedidos/${id}/delete`, {
+      await fetch(`/burger/pedidos/${burgerId}/${optionalId}/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -198,7 +209,7 @@ export default {
         })
         .catch(error => {
           console.error("Erro ao deletar pedido:", error);
-        });
+        })
     },
   }
 };
@@ -224,13 +235,27 @@ export default {
   border-bottom: 3px solid #333;
 }
 
-.checkbox{
-  display:flex;
-  margin:8px;
+#formBurger .checkbox{
+  margin:2px;
 }
-.checkbox label{
+
+#formBurger{
+  width: 100%;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+#formBurger label{
   padding: 2px;
 }
+
+#formBurger input, select{
+  padding: 6px;
+  margin:2px;
+  width: 90%;
+}
+
 .burger-table-row {
   width: 100%;
   padding: 12px;
@@ -245,13 +270,6 @@ export default {
 #burger-table-heading .order-id,
 .burger-table-row .order-number {
   width: 5%;
-}
-
-select,
-input {
-  padding: 6px;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .btn,
@@ -273,4 +291,5 @@ input {
   background: transparent;
   color: #222;
 }
+
 </style>

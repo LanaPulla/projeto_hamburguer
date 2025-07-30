@@ -35,16 +35,29 @@ class BurgerService {
         }
     }
 
-    public function editSeparately($id, $attributes)
+    public function editSeparately($attributes)
     {
        try{
-            $this->burger->update($id, $attributes);
-            $this->optional->update($id, $attributes);
+            $this->burger->update($attributes);
+            $id = $attributes['id'];
+            $this->optional->update($id, $attributes['optional_id']);
             return true;
        }catch (\Exception $ex) {
             Log::error('Erro no store: ' . $ex->getMessage(), ['trace' => $ex->getTraceAsString()]);
             throw $ex;
         }
     }
+
+     public function destroy($burgerId, $optionalId)
+     {
+        try{
+            $this->burger->destroy($burgerId);
+            $this->optional->destroy($optionalId);
+        }
+        catch (\Exception $ex) {
+            Log::error('Erro no store: ' . $ex->getMessage(), ['trace' => $ex->getTraceAsString()]);
+            throw $ex;
+        }
+     }
 
 }

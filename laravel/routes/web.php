@@ -9,9 +9,8 @@ Route::group(['prefix' => 'burger'], function (){
     Route::get('/pedir', [BurgerController::class, 'index'])->name('burger.index');
     Route::post('/pedir', [BurgerController::class, 'store'])->name('burger.store');
     Route::get('/pedidos', [BurgerController::class, 'show'])->name('burger.show');    
-    Route::delete('/pedidos/{id}/delete', [BurgerController::class, 'delete'])->name('burger.delete');
-    Route::delete('/pedidos/{id}/delete/opcionais', [OptionalController::class, 'delete'])->name('optional.delete');
-    Route::post('/pedidos/{id}', [BurgerController::class, 'edit'])->name('burger.edit');
+    Route::delete('/pedidos/{id}/{optional_id}/delete', [BurgerController::class, 'delete'])->name('burger.delete');
+    Route::post('/pedidos/{id}/editar', [BurgerController::class, 'edit'])->name('burger.edit');
     Route::post('/pedidos/{id}/alterar-status', [BurgerController::class, 'editStatus'])->name('burger.edit.status');
 });
 
