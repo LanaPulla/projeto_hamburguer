@@ -77,7 +77,6 @@ class BurgerController extends Controller
         return response()->json([
             'home' => route('burger.index'),
             'pedidos' => route('burger.show'),
-            //'detalhes' => route('burger.show'),
         ]);
     }
 
@@ -86,12 +85,13 @@ class BurgerController extends Controller
         return $edit;
     }
     
-    public function delete($burgerId, $optionalId){
-        $burger = $this->service->destroy($burgerId, $optionalId);
+    public function delete($id){
+        $burger = $this->service->destroy($id);
+       
         return response()->json([
             'success' => true,
-            'id'      => $burgerId,
-            'message' => 'Pedido N°' . $burgerId . ' deletado com sucesso'
+            'id'      => $id,
+            'message' => 'Pedido N°' . $id . ' deletado com sucesso'
         ], 200);
     }
 

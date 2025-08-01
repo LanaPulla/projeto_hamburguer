@@ -14,7 +14,7 @@
     <div id="burger-table-rows">
       <div class="burger-table-row" v-for="burger in burgers" :key="burger.id">
         <template v-if="editingBurgerId === burger.id">
-          <form @submit.prevent="saveEditedBurger(burger.id)" id="formBurger">
+          <form @submit.prevent="saveEditedBurger(burger)" id="formBurger">
             <div class="order-number">{{ burger.id }}</div>
 
             <div>
@@ -68,7 +68,7 @@
                 {{ status.value }}
               </option>
             </select>
-            <button class="delete-btn" @click="deleteBurger(burger.id, burger.optional_id)">Cancelar Pedido</button>
+            <button class="delete-btn" @click="deleteBurger(burger.id)">Cancelar Pedido</button>
             <button class="edit-btn" @click="editBurger(burger)">Editar</button>
           </div>
         </template>
@@ -167,9 +167,10 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.msg = res.message;
-            setTimeout(() => (this.msg = ""), 7000);
-            this.editingBurgerId = null;
-            delete this.burgers[id];
+          setTimeout(() => {
+            window.location.reload(),
+            this.msg = "";
+          }, 4000);
         })
         .catch(error => {
             console.error("Erro ao editar pedido:", error);
@@ -191,9 +192,9 @@ export default {
         body: JSON.stringify(data)
       });
     },
-    async deleteBurger(burgerId, optionalId) {
+    async deleteBurger(id) {
       const token = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-      await fetch(`/burger/pedidos/${burgerId}/${optionalId}/delete`, {
+      await fetch(`/burger/pedidos/${id}/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -204,8 +205,10 @@ export default {
         .then(res => res.json())
         .then(res => {
           this.msg = res.message;
-          setTimeout(() => (this.msg = ""), 7000);
-          delete this.burgers[id];
+          setTimeout(() => {
+            window.location.reload(),
+            this.msg = "";
+          }, 4000);
         })
         .catch(error => {
           console.error("Erro ao deletar pedido:", error);

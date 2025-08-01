@@ -65,6 +65,8 @@ class OptionalRepository implements OptionalRepositoryInterface{
 
    public function update($id, $attributes)
     {
+                // dd($id);
+
         $salami = false;
         $cheddar = false;
         $red_onion = false;
@@ -116,9 +118,9 @@ class OptionalRepository implements OptionalRepositoryInterface{
         return $optional;
     }
 
-    public function destroy($optinal)
+    public function destroy($id)
     {
-       return $this->model->findOrFail($optinal)->delete();
+       return $this->model->findOrFail($id)->delete();
     }
 
     
