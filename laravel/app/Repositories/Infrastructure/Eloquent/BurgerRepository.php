@@ -35,7 +35,7 @@ class BurgerRepository implements BurgerRepositoryInterface{
     public function findAll()
     {        
         $search = $this->model->newQuery(); 
-        $burgers = $search->orderBy('status_id', 'desc')->get(); //precisa ver esse filtro de novo depois
+        $burgers = $search->orderBy('id', 'asc')->get();
         return $burgers;
     }
 
@@ -55,7 +55,7 @@ class BurgerRepository implements BurgerRepositoryInterface{
             $name = mb_strtoupper(str_replace(' ', '%', trim($attributes->person_name)));
             $search->where(DB::raw("UPPER(person_name)"), 'LIKE', '%' . $name . '%'); 
         }
-
+        $search->orderBy('id', 'desc');
         return $search->get();
     }
 

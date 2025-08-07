@@ -28,7 +28,7 @@ class BurgerController extends Controller
 
     public function show(Request $request)   
     {
-        if($request){
+        if($request->all() !== []){
             $burgers = $this->repository->filter($request);
         }else{
             $burgers = $this->repository->findAll()->keyBy('id');

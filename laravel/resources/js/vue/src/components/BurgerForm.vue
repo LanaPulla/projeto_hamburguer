@@ -145,8 +145,7 @@ export default {
         this.opcionais = [];
     },
   },
-
-  mounted() {
+  created() {
     this.getPaes();
     this.getCarnes();
     this.getOpcionais();

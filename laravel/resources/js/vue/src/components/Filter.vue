@@ -39,16 +39,27 @@ export default {
           const req = await fetch("/api/status");
           const data = await req.json();
           this.allStatus = data;
-            console.log(this.statusSelected);
+        },
+        oldFilter(){
+          const params = new URLSearchParams(window.location.search);
+
+          if(params.has("person_name")){
+            this.client = params.get("person_name");
+          }
+           
+          const statusIds = params.getAll("status_id[]");
+          if (statusIds.length > 0) {
+            this.statusSelected = statusIds;
+          }
         },
     },
     watch: {
         statusSelected(newValue){
-            console.log(newValue);
         }
     }, 
-    mounted(){
+    created(){
         this.getStatus();
+        this.oldFilter();
     }
 }
 </script>
